@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Gullu 🌹</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #c9697a;
+    --rose-light: #f5dde2;
+    --rose-dark: #8b3a4a;
+    --gold: #c9a96e;
+    --gold-light: #f5edd8;
+    --cream: #fdf8f4;
+    --dark: #2b1c20;
+    --muted: #7a5f65;
+  }
+
+  html, body {
+    height: 100%; width: 100%;
+    overflow: hidden;
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+  }
+
+  /* ── PETAL BG ── */
+  .petal-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .petal {
+    position: absolute;
+    background: var(--rose);
+    border-radius: 50% 0 50% 0;
+    opacity: 0;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(-40px) rotate(0deg);   opacity: 0.55; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── PAGE SYSTEM ── */
+  .pages-container {
+    position: fixed; inset: 0; z-index: 1;
+  }
+
+  .page {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.7s ease, transform 0.7s ease;
+    transform: translateX(60px);
+    overflow-y: auto;
+  }
+
+  .page.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
+
+  .page.exit-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    pointer-events: none;
+  }
+
+  /* ── NAV DOTS ── */
+  .nav-dots {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--rose-light);
+    border: 1.5px solid var(--rose);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .dot.active { background: var(--rose); transform: scale(1.3); }
+
+  /* ── ARROW BUTTONS ── */
+  .nav-arrows {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 10px;
+    z-index: 100;
+  }
+
+  .arrow-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rose);
+    background: rgba(255,255,255,0.85);
+    color: var(--rose);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    backdrop-filter: blur(4px);
+  }
+  .arrow-btn:hover { background: var(--rose); color: #fff; }
+  .arrow-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  /* ── PAGE INDICATOR ── */
+  .page-num {
+    position: fixed;
+    top: 1.5rem;
+    right: 2rem;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    z-index: 100;
+  }
+
+  /* ─────────────── PAGE 1 — HERO ─────────────── */
+  .page-hero { background: radial-gradient(ellipse at 60% 30%, #f7e8ed 0%, var(--cream) 70%); }
+
+  .hero-ornament {
+    font-size: 1.2rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--rose-dark);
+    text-align: center;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--rose);
+  }
+
+  .hero-sub {
+    margin-top: 1.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .hero-cta {
+    margin-top: 2.5rem;
+    padding: 0.75rem 2.2rem;
+    background: var(--rose);
+    color: #fff;
+    border: none;
+    border-radius: 30px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hero-cta:hover { background: var(--rose-dark); transform: translateY(-2px); }
+
+  /* ─────────────── PAGE 2 — MESSAGE ─────────────── */
+  .page-message { background: linear-gradient(135deg, #fff5f7 0%, #fffaf5 100%); }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .message-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.15rem, 3vw, 1.65rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.8;
+    color: var(--rose-dark);
+    position: relative;
+    padding: 0 1.5rem;
+    max-width: 680px;
+    text-align: center;
+  }
+
+  .message-quote::before {
+    content: '\201C';
+    font-size: 5rem;
+    color: var(--rose-light);
+    position: absolute;
+    top: -2rem;
+    left: 0;
+    font-family: 'Cormorant Garamond', serif;
+    line-height: 1;
+  }
+
+  .message-author {
+    margin-top: 2rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+  }
+
+  /* ─────────────── PAGE 3 — CALENDAR ─────────────── */
+  .page-calendar { background: var(--cream); }
+
+  .page-calendar h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 300;
+    color: var(--rose-dark);
+    margin-bottom: 0.4rem;
+    text-align: center;
+  }
+
+  .page-calendar > .page-inner > p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .page-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-height: calc(100vh - 6rem);
+  }
+
+  .calendar-wrapper {
+    background: #fff;
+    border: 1px solid var(--rose-light);
+    border-radius: 20px;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 8px 40px rgba(180, 80, 100, 0.08);
+  }
+
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .cal-header h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--rose-dark);
+  }
+
+  .cal-nav {
+    background: none;
+    border: 1px solid var(--rose-light);
+    color: var(--rose);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .cal-nav:hover { background: var(--rose-light); }
+
+  .cal-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .cal-days-header span {
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 0.3rem 0;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--dark);
+    transition: all 0.2s;
+    border: 1.5px solid transparent;
+    background: none;
+    font-family: 'Lato', sans-serif;
+    position: relative;
+  }
+
+  .cal-day:hover:not(.empty):not(.past) { background: var(--rose-light); color: var(--rose-dark); }
+  .cal-day.empty { cursor: default; }
+  .cal-day.past { color: #ccc; cursor: not-allowed; }
+
+  .cal-day.has-surprise::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 50%;
+    transform: translateX(-50%);
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--rose);
+  }
+
+  .cal-day.selected {
+    background: var(--rose) !important;
+    color: #fff !important;
+    border-color: var(--rose-dark);
+  }
+
+  /* ─────────────── PAGE 4 — SURPRISE ─────────────── */
+  .page-surprise { background: linear-gradient(135deg, #fff0f4 0%, #fffbf0 100%); }
+
+  .surprise-card {
+    background: #fff;
+    border: 1px solid var(--rose-light);
+    border-radius: 20px;
+    padding: 2.5rem 2.5rem;
+    text-align: center;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 8px 40px rgba(180,80,100,0.08);
+  }
+
+  .surprise-emoji { font-size: 3rem; margin-bottom: 1rem; }
+
+  .surprise-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--rose-dark);
+    margin-bottom: 1rem;
+  }
+
+  .surprise-card p {
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  .surprise-tag {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.35rem 1.1rem;
+    background: var(--rose-light);
+    color: var(--rose-dark);
+    border-radius: 20px;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .surprise-date-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .back-btn {
+    margin-top: 1.8rem;
+    padding: 0.6rem 1.8rem;
+    background: none;
+    color: var(--rose);
+    border: 1.5px solid var(--rose);
+    border-radius: 30px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .back-btn:hover { background: var(--rose); color: #fff; }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confetti-fall 2.2s ease forwards;
+  }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) rotate(0); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 500px) {
+    .surprise-card { padding: 1.8rem 1.2rem; }
+    .message-quote { font-size: 1.05rem; padding: 0 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="petal-bg" id="petals"></div>
+
+<div class="pages-container" id="pages-container">
+
+  <!-- PAGE 1: HERO -->
+  <div class="page page-hero active" data-page="0">
+    <div class="hero-ornament">✦ &nbsp; ✦ &nbsp; ✦</div>
+    <h1 class="hero">For my<br><em>Gullu</em></h1>
+    <p class="hero-sub">a little corner of the internet, made just for you</p>
+    <button class="hero-cta" onclick="goTo(1)">Open My Surprise ✨</button>
+  </div>
+
+  <!-- PAGE 2: MESSAGE -->
+  <div class="page page-message" data-page="1">
+    <p class="section-label">from my heart</p>
+    <div class="message-quote">
+      Gurvir, you are the kind of person who makes ordinary moments feel like magic.
+      Your laughter is my favourite sound in the world, and your smile —
+      the one you do when you're trying not to laugh — is something I never want to stop seeing.
+      You are kind, you are strong, and you are so much more beautiful than you know.
+      I'm grateful every single day that somehow, out of everyone in the world,
+      I get to call you mine.
+      <br><br>
+      This little site is just my way of saying: I think about you always,
+      and I will keep finding ways to show you how much you mean to me.
+    </div>
+    <p class="message-author">— always yours 🌹</p>
+  </div>
+
+  <!-- PAGE 3: CALENDAR -->
+  <div class="page page-calendar" data-page="2">
+    <div class="page-inner">
+      <p class="section-label">pick a date</p>
+      <h2>Your Surprise Calendar</h2>
+      <p>Every future date holds something special — pick one to reveal your surprise ✨</p>
+      <div class="calendar-wrapper">
+        <div class="cal-header">
+          <button class="cal-nav" id="prev-btn">&#8249;</button>
+          <h3 id="cal-title"></h3>
+          <button class="cal-nav" id="next-btn">&#8250;</button>
+        </div>
+        <div class="cal-days-header">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span>
+          <span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE 4: SURPRISE REVEAL -->
+  <div class="page page-surprise" data-page="3">
+    <div class="surprise-date-label" id="surprise-date-label"></div>
+    <div class="surprise-card">
+      <div class="surprise-emoji" id="surprise-emoji"></div>
+      <h3 id="surprise-title"></h3>
+      <p id="surprise-text"></p>
+      <span class="surprise-tag" id="surprise-tag"></span>
+    </div>
+    <button class="back-btn" onclick="goTo(2)">← Pick Another Date</button>
+  </div>
+
+</div>
+
+<!-- Nav dots -->
+<div class="nav-dots" id="nav-dots">
+  <div class="dot active" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+  <div class="dot" onclick="goTo(3)"></div>
+</div>
+
+<!-- Arrow buttons -->
+<div class="nav-arrows">
+  <button class="arrow-btn" id="prev-page" onclick="goTo(currentPage - 1)">&#8592;</button>
+  <button class="arrow-btn" id="next-page" onclick="goTo(currentPage + 1)">&#8594;</button>
+</div>
+
+<!-- Page counter -->
+<div class="page-num" id="page-num">1 / 4</div>
+
+<script>
+// ── PETALS ──
+(function() {
+  const container = document.getElementById('petals');
+  const colors = ['#e8aab8','#f5c6d0','#d48b9a','#c9697a','#f0d5d9'];
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (7 + Math.random() * 8) + 's';
+    p.style.animationDelay = (Math.random() * 14) + 's';
+    p.style.width = (7 + Math.random() * 7) + 'px';
+    p.style.height = (10 + Math.random() * 8) + 'px';
+    container.appendChild(p);
+  }
+})();
+
+// ── PAGE NAVIGATION ──
+let currentPage = 0;
+const totalPages = 4;
+const pages = document.querySelectorAll('.page');
+const dots = document.querySelectorAll('.dot');
+
+function goTo(n) {
+  if (n < 0 || n >= totalPages) return;
+  pages[currentPage].classList.remove('active');
+  pages[currentPage].classList.add('exit-left');
+  setTimeout(() => pages[currentPage].classList.remove('exit-left'), 700);
+
+  currentPage = n;
+  pages[currentPage].classList.add('active');
+
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentPage));
+  document.getElementById('page-num').textContent = (currentPage + 1) + ' / ' + totalPages;
+  document.getElementById('prev-page').disabled = currentPage === 0;
+  document.getElementById('next-page').disabled = currentPage === totalPages - 1;
+}
+
+document.getElementById('prev-page').disabled = true;
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(currentPage + 1);
+  if (e.key === 'ArrowLeft')  goTo(currentPage - 1);
+});
+
+// ── SURPRISES DATA ──
+const surprises = [
+  { emoji: '🌹', title: 'A Real Bouquet', text: 'Today is the day you get real flowers — roses, because you deserve nothing less. Watch your doorstep, Gullu.', tag: '🌸 Real-life surprise' },
+  { emoji: '🍰', title: 'Dessert Date Night', text: 'Your favourite dessert, candles, and a movie you pick. Tonight is 100% yours — no compromises at all.', tag: '🎬 Date night' },
+  { emoji: '💌', title: 'A Handwritten Letter', text: 'I wrote you something on paper — old-fashioned, yes, but some feelings deserve ink and a sealed envelope.', tag: '✉️ Personal surprise' },
+  { emoji: '✨', title: 'Wish Granted Day', text: 'Whatever you want to do today — I\'m in. Park walk? Fancy dinner? Stay in bed with snacks? Your call entirely.', tag: '👑 Your day, your rules' },
+  { emoji: '🎵', title: 'A Playlist for You', text: 'I made you a playlist of every song that reminds me of you. Press play and know each one was chosen with love.', tag: '🎧 Playlist surprise' },
+  { emoji: '🌙', title: 'Stargazing Night', text: 'Tonight we look at the stars together. I\'ll find the prettiest one and name it after you in my heart.', tag: '🔭 Evening adventure' },
+  { emoji: '📸', title: 'Memory Wall', text: 'I\'m putting together a photo collage of my favourite moments with you — every photo is proof of how lucky I am.', tag: '💛 Keepsake' },
+  { emoji: '☕', title: 'Breakfast in Bed', text: 'Tomorrow morning — don\'t get up. I\'m making your favourite breakfast and bringing it to you. Just sleep in, Gullu.', tag: '🍳 Morning surprise' },
+  { emoji: '💐', title: 'Scavenger Hunt', text: 'I hid 5 little notes, each one leading to the next. The last one leads to something special, just for you.', tag: '🗺️ Treasure hunt' },
+  { emoji: '🎁', title: 'Secret Gift Box', text: 'There\'s a box waiting for you. I won\'t say what\'s inside — but I think you\'ll smile big when you open it.', tag: '🎀 Unwrap me' },
+  { emoji: '🕯️', title: 'Candlelit Evening', text: 'Candles, your favourite food, soft music. No phones. Just us, tonight.', tag: '🌹 Romance night' },
+  { emoji: '🛁', title: 'Spa Night at Home', text: 'Bubble bath, face masks, and your favourite show. I\'ll make sure everything is ready and you just relax.', tag: '🧖 Pamper night' },
+];
+
+function getSurprise(year, month, day) {
+  const seed = year * 10000 + month * 100 + day;
+  return surprises[seed % surprises.length];
+}
+
+// ── CALENDAR ──
+let calMonth = new Date().getMonth();
+let calYear  = new Date().getFullYear();
+const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function renderCalendar() {
+  document.getElementById('cal-title').textContent = monthNames[calMonth] + ' ' + calYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date();
+  const todayFlat = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  for (let i = 0; i < firstDay; i++) {
+    const b = document.createElement('button');
+    b.className = 'cal-day empty';
+    grid.appendChild(b);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const b = document.createElement('button');
+    b.className = 'cal-day';
+    b.textContent = d;
+    const thisDate = new Date(calYear, calMonth, d);
+    if (thisDate < todayFlat) {
+      b.classList.add('past');
+    } else {
+      b.classList.add('has-surprise');
+      const yr = calYear, mo = calMonth, dy = d;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.cal-day').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+        revealSurprise(yr, mo, dy);
+      });
+    }
+    grid.appendChild(b);
+  }
+}
+
+function revealSurprise(year, month, day) {
+  const s = getSurprise(year, month, day);
+  const dateStr = monthNames[month] + ' ' + day + ', ' + year;
+  document.getElementById('surprise-date-label').textContent = '✦  ' + dateStr + '  ✦';
+  document.getElementById('surprise-emoji').textContent = s.emoji;
+  document.getElementById('surprise-title').textContent = s.title;
+  document.getElementById('surprise-text').textContent  = s.text;
+  document.getElementById('surprise-tag').textContent   = s.tag;
+  goTo(3);
+  launchConfetti();
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+});
+document.getElementById('next-btn').addEventListener('click', () => {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+});
+
+renderCalendar();
+
+// ── CONFETTI ──
+function launchConfetti() {
+  const colors = ['#c9697a','#c9a96e','#f5dde2','#8b3a4a','#f5edd8','#e8aab8','#fff'];
+  for (let i = 0; i < 55; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = (10 + Math.random() * 80) + 'vw';
+      c.style.top = (Math.random() * 30) + 'vh';
+      c.style.width  = (6 + Math.random() * 7) + 'px';
+      c.style.height = (6 + Math.random() * 7) + 'px';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.4 ? '50%' : '2px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 2500);
+    }, i * 35);
+  }
+}
+</script>
+</body>
+</html>
